@@ -20,7 +20,7 @@ app.get('/sports/:name', (request, response) => {
 	let sportName = request.params.name;
 	console.log('sport name: ', sportName);
 	let sport = {
-		"name" : "Cycling",
+		"name" : "sdasdasd",
 		"goldMedals": [{
 			"division": "Men's Sprint",
 			"country": "UK",
@@ -29,7 +29,7 @@ app.get('/sports/:name', (request, response) => {
 		{
 			"division": "Women's sprint",
 			"country": "Poland",
-			"year" : 2017
+			"year" : 3017
 		}]
 
 	};
