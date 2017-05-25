@@ -7,6 +7,7 @@ angular.module('olympics', ["ui.router"])
   $locationProvider.hashPrefix('');
 
   $stateProvider
+    
     .state('sports', {
       url: '/sports',
       templateUrl: 'sports/sports-nav.html',
@@ -20,6 +21,7 @@ angular.module('olympics', ["ui.router"])
       },
       controllerAs: 'sportsCtrl'
     })
+    
     .state('sports.medals', {
       url: '/:sportName',
       templateUrl: 'sports/sports-medals.html',
@@ -32,5 +34,19 @@ angular.module('olympics', ["ui.router"])
         this.sport = sportService.data;
       },
       controllerAs: 'sportCtrl'
+    })
+    
+    .state('sports.new', {
+      url: '/:sportName/medal/new',
+      templateUrl: 'sports/new-medal.html',
+      controller: function($stateParams, $state){
+        this.sportName = $stateParams.sportName;
+
+        this.saveMedal = function(medal){
+          console.log('medal: ', medal);
+          $state.go('sports.medals', {sportName: $stateParams.sportName});
+        }
+      },
+      controllerAs: 'newMedalCtrl'
     })
 })
