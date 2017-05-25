@@ -9,29 +9,29 @@ mongoUtil.connect();
 app.use( express.static(__dirname + "/../client") );
 
 app.get("/sports", (request, response) => {
-  let sports = mongoUtil.sports();
-  sports.find().toArray((err,docs) => {
-    if(err) {
-      response.sendStatus(400);
-    }
-    console.log(JSON.stringify(docs));
-    let sportNames = docs.map((sport) => sport.name);
-    response.json( sportNames );
-  });
+	let sports = mongoUtil.sports();
+	sports.find().toArray((err,docs) => {
+		if(err) {
+			response.sendStatus(400);
+		}
+		console.log(JSON.stringify(docs));
+		let sportNames = docs.map((sport) => sport.name);
+		response.json( sportNames );
+	});
 });
 
 app.get("/sports/:name", (request, response) => {
-  
-  let sportName = request.params.name;
+	
+	let sportName = request.params.name;
 
-  let sports = mongoUtil.sports();
-  sports.find({name: sportName}).limit(1).next((err,doc) => {
-    if(err) {
-      response.sendStatus(400);
-    }
-    console.log( "Sport doc: ", doc );
-    response.json(doc);
-  });
+	let sports = mongoUtil.sports();
+	sports.find({name: sportName}).limit(1).next((err,doc) => {
+		if(err) {
+			response.sendStatus(400);
+		}
+		console.log( "Sport doc: ", doc );
+		response.json(doc);
+	});
 
 });
 
@@ -40,13 +40,26 @@ let jsonparser = bodyparser.json();
 
 app.post("/sports/:name/medal", jsonparser, (request, response) => {
 
-  let sportName = request.params.name;
-  let medal = request.body;
+	let sportName = request.params.name;
+	let newMedal = request.body.medal || {};
+	if(!newMedal.division || !newMedal.country || !newMedal.year){
+		response.sendStatus(400);
+		console.log('Bad request!');
+		return;
+	}
+	
+	let sports = mongoUtil.sports();
+	let query = {name: sportName};
+	let update = {$push: {goldMedals: newMedal}};
 
-  console.log('Sport: ', sportName);
-  console.log('Medal: ', medal);
+	sports.findOneAndUpdate(query, update, (err, res) => {
+		if(err){
+			response.sendStatus(400);
+		}
+		response.sendStatus(201);
+	});
 
-  response.sendStatus(201);
+	
 
 });
 
