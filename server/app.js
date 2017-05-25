@@ -21,6 +21,7 @@ app.get("/sports", (request, response) => {
 });
 
 app.get("/sports/:name", (request, response) => {
+  
   let sportName = request.params.name;
 
   let sports = mongoUtil.sports();
@@ -31,6 +32,21 @@ app.get("/sports/:name", (request, response) => {
     console.log( "Sport doc: ", doc );
     response.json(doc);
   });
+
+});
+
+let bodyparser = require('body-parser');
+let jsonparser = bodyparser.json();
+
+app.post("/sports/:name/medal", jsonparser, (request, response) => {
+
+  let sportName = request.params.name;
+  let medal = request.body;
+
+  console.log('Sport: ', sportName);
+  console.log('Medal: ', medal);
+
+  response.sendStatus(201);
 
 });
 
